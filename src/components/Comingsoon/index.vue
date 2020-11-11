@@ -1,7 +1,7 @@
 <template>
     <div class="movie_body">
         <ul>
-            <li>
+            <!-- <li>
                 <div class="pic_show"><img src="/images/movie_1.jpg"></div>
                 <div class="info_list">
                     <h2>无名之辈</h2>
@@ -24,87 +24,50 @@
                 <div class="btn_pre">
                     预售
                 </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="/images/movie_1.jpg"></div>
+            </li> -->
+
+            <li v-for="item in comingList" :key="item.id">
+                <div class="pic_show"><img :src="item.img | filterImg"></div>
                 <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p><span class="person">17746</span> 人想看</p>
-                    <p>主演: 陈建斌,任素汐,潘斌龙</p>
-                    <p>2018-11-30上映</p>
+                    <h2>{{item.nm}}</h2>
+                    <p><span class="person">{{item.wish}}</span> 人想看</p>
+                    <p>主演:{{item.star}}</p>
+                    <p>{{item.rt}}</p>
                 </div>
                 <div class="btn_pre">
                     预售
                 </div>
             </li>
-            <li>
-                <div class="pic_show"><img src="/images/movie_2.jpg"></div>
-                <div class="info_list">
-                    <h2>毒液：致命守护者</h2>
-                    <p><span class="person">2346</span> 人想看</p>
-                    <p>主演: 汤姆·哈迪,米歇尔·威廉姆斯,里兹·阿迈德</p>
-                    <p>2018-11-30上映</p>
-                </div>
-                <div class="btn_pre">
-                    预售
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="/images/movie_1.jpg"></div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p><span class="person">17746</span> 人想看</p>
-                    <p>主演: 陈建斌,任素汐,潘斌龙</p>
-                    <p>2018-11-30上映</p>
-                </div>
-                <div class="btn_pre">
-                    预售
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="/images/movie_2.jpg"></div>
-                <div class="info_list">
-                    <h2>毒液：致命守护者</h2>
-                    <p><span class="person">2346</span> 人想看</p>
-                    <p>主演: 汤姆·哈迪,米歇尔·威廉姆斯,里兹·阿迈德</p>
-                    <p>2018-11-30上映</p>
-                </div>
-                <div class="btn_pre">
-                    预售
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="/images/movie_1.jpg"></div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p><span class="person">17746</span> 人想看</p>
-                    <p>主演: 陈建斌,任素汐,潘斌龙</p>
-                    <p>2018-11-30上映</p>
-                </div>
-                <div class="btn_pre">
-                    预售
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="/images/movie_2.jpg"></div>
-                <div class="info_list">
-                    <h2>毒液：致命守护者</h2>
-                    <p><span class="person">2346</span> 人想看</p>
-                    <p>主演: 汤姆·哈迪,米歇尔·威廉姆斯,里兹·阿迈德</p>
-                    <p>2018-11-30上映</p>
-                </div>
-                <div class="btn_pre">
-                    预售
-                </div>
-            </li>
+            
         </ul>
     </div>
 		
 </template>
 
 <script>
+import axios from "axios";
+import Vue from 'vue'
+    //过滤器：对图片处理
+        Vue.filter('filterImg',(url)=>{
+            return url.replace('w.h','128.180')
+        })
+
 export default {
-    name:"Comingsoon"
+    name:"Comingsoon",
+    data() {
+        return {
+            comingList:[]
+        }
+    },
+
+    mounted(){
+        axios.get("/ajax/comingList?ci=1&token=&limit=10&optimus_uuid=41356720173011EBA0E401F52CFA2FA97BD666F375B74A2B87BD7D204283F828&optimus_risk_level=71&optimus_code=10").then(res=>{
+            this.comingList = res.data.coming;
+             console.log(this.comingList)
+        })
+        
+    }
+
 }
 </script>
 
@@ -117,6 +80,7 @@ export default {
     .movie_body .info_list { margin-left: 10px; flex:1; position: relative;}
     .movie_body .info_list h2{ font-size: 17px; line-height: 24px; width:150px; overflow: hidden; white-space: nowrap; text-overflow:ellipsis;}
     .movie_body .info_list p{ font-size: 13px; color:#666; line-height: 22px; width:200px; overflow: hidden; white-space: nowrap; text-overflow:ellipsis;}
+    .movie_body .info_list .person{color: #faaf00;font-size: 15px;font-weight: 600;}
     .movie_body .info_list .grade{ font-weight: 700; color: #faaf00; font-size: 15px;}
     .movie_body .info_list img{ width:50px; position: absolute; right:10px; top: 5px;}
     .movie_body .btn_mall , .movie_body .btn_pre{ width:47px; height:27px; line-height: 28px; text-align: center; background-color: #f03d37; color: #fff; border-radius: 4px; font-size: 12px; cursor: pointer;}

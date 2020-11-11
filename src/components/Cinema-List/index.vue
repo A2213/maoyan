@@ -1,7 +1,7 @@
 <template>
     <div class="cinema_body">
         <ul>
-            <li>
+            <!-- <li>
                 <div>
                     <span>大地影院(澳东世纪店)</span>
                     <span class="q"><span class="price">22.9</span> 元起</span>
@@ -28,70 +28,81 @@
                     <div>小吃</div>
                     <div>折扣卡</div>
                 </div>
-            </li>
-            <li>
+            </li> -->
+
+            <li v-for="item in dataLiat" :key="item.id">
                 <div>
-                    <span>大地影院(澳东世纪店)</span>
+                    <span>{{item.nm}}</span>
                     <span class="q"><span class="price">22.9</span> 元起</span>
                 </div>
                 <div class="address">
-                    <span>金州区大连经济技术开发区澳东世纪3层</span>
-                    <span>1763.5km</span>
+                    <span>{{item.addr}}</span>
+                    <span>{{item.distance}}</span>
                 </div>
                 <div class="card">
-                    <div>小吃</div>
-                    <div>折扣卡</div>
+                    <div v-for="(num,key) in item.tag" v-if="num === 1" :key="key" :class="key | classCard">
+                        {{key | formatCard }}
+                    </div>
+                    
                 </div>
             </li>
-            <li>
-                <div>
-                    <span>大地影院(澳东世纪店)</span>
-                    <span class="q"><span class="price">22.9</span> 元起</span>
-                </div>
-                <div class="address">
-                    <span>金州区大连经济技术开发区澳东世纪3层</span>
-                    <span>1763.5km</span>
-                </div>
-                <div class="card">
-                    <div>小吃</div>
-                    <div>折扣卡</div>
-                </div>
-            </li>
-            <li>
-                <div>
-                    <span>大地影院(澳东世纪店)</span>
-                    <span class="q"><span class="price">22.9</span> 元起</span>
-                </div>
-                <div class="address">
-                    <span>金州区大连经济技术开发区澳东世纪3层</span>
-                    <span>1763.5km</span>
-                </div>
-                <div class="card">
-                    <div>小吃</div>
-                    <div>折扣卡</div>
-                </div>
-            </li>
-            <li>
-                <div>
-                    <span>大地影院(澳东世纪店)</span>
-                    <span class="q"><span class="price">22.9</span> 元起</span>
-                </div>
-                <div class="address">
-                    <span>金州区大连经济技术开发区澳东世纪3层</span>
-                    <span>1763.5km</span>
-                </div>
-                <div class="card">
-                    <div>小吃</div>
-                    <div>折扣卡</div>
-                </div>
-            </li>
+            
         </ul>
     </div>
 </template>
 
 <script>
+import axios from 'axios'
 export default {
-    
+    name:"Cinema-List",
+    data(){
+        return{
+            dataLiat:[],
+        }
+    },
+    mounted(){
+        axios.get("/ajax/cinemaList")
+        .then(res=>{
+            console.log(res.data)
+            this.dataLiat = res.data.cinemas;
+            
+        })
+    },
+    filters:{
+        //过滤标签
+        formatCard(key){
+            var card = [
+                { key : "allowRefund", value : "改签"},
+                { key : "endorse", value : "退"},
+                { key : "sell", value : "点餐"},
+                { key : "snack", value : "小吃"},
+                { key : "deal", value : "折扣卡"},
+            ];
+            for(var i=0; i<card.length; i++){
+                if(card[i].key === key){
+                    return card[i].value;
+                }
+            }
+            return '';
+        },
+        //过滤颜色小框
+        classCard(key){
+            var card = [
+                { key : "allowRefund", value : "bl"},
+                { key : "endorse", value : "bl"},
+                { key : "sell", value : "or"},
+                { key : "snack", value : "or"},
+                { key : "deal", value : "or"},
+            ];
+            for(var i=0; i<card.length; i++){
+                if(card[i].key === key){
+                    return card[i].value;
+                }
+            }
+            return '';
+        }
+    }
+
 
 }
 </script>
