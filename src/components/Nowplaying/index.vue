@@ -1,7 +1,7 @@
 <template>
     <div class="movie_body">
         <ul>
-            <li>
+            <!-- <li>
                 <div class="pic_show"><img src="/images/movie_1.jpg"></div>
                 <div class="info_list">
                     <h2>无名之辈</h2>
@@ -24,77 +24,21 @@
                 <div class="btn_mall">
                     购票
                 </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="/images/movie_1.jpg"></div>
+            </li> -->
+            
+            <li v-for="item in movieList" :key="item.id">
+                <div class="pic_show"><img :src="item.img | filterImg(item.img)"></div>
                 <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演: 陈建斌,任素汐,潘斌龙</p>
-                    <p>今天55家影院放映607场</p>
+                    <h2>{{item.nm}}
+                        <img v-if="item.version=='v2d imax'" src="@/assets/2Dmax.png" alt="">
+                        <img v-else-if="item.version=='v3d imax'" src="@/assets/3Dmax.png" alt="">
+                        </h2>
+                    <p>观众评 <span class="grade">{{item.sc}}</span></p>
+                    <p>主演:{{item.star}}</p>
+                    <p>{{item.showInfo}}</p>
                 </div>
                 <div class="btn_mall">
-                    购票
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="/images/movie_2.jpg"></div>
-                <div class="info_list">
-                    <h2>毒液：致命守护者</h2>
-                    <p>观众评 <span class="grade">9.3</span></p>
-                    <p>主演: 汤姆·哈迪,米歇尔·威廉姆斯,里兹·阿迈德</p>
-                    <p>今天56家影院放映443场</p>
-                </div>
-                <div class="btn_mall">
-                    购票
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="/images/movie_1.jpg"></div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演: 陈建斌,任素汐,潘斌龙</p>
-                    <p>今天55家影院放映607场</p>
-                </div>
-                <div class="btn_mall">
-                    购票
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="/images/movie_2.jpg"></div>
-                <div class="info_list">
-                    <h2>毒液：致命守护者</h2>
-                    <p>观众评 <span class="grade">9.3</span></p>
-                    <p>主演: 汤姆·哈迪,米歇尔·威廉姆斯,里兹·阿迈德</p>
-                    <p>今天56家影院放映443场</p>
-                </div>
-                <div class="btn_mall">
-                    购票
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="/images/movie_1.jpg"></div>
-                <div class="info_list">
-                    <h2>无名之辈</h2>
-                    <p>观众评 <span class="grade">9.2</span></p>
-                    <p>主演: 陈建斌,任素汐,潘斌龙</p>
-                    <p>今天55家影院放映607场</p>
-                </div>
-                <div class="btn_mall">
-                    购票
-                </div>
-            </li>
-            <li>
-                <div class="pic_show"><img src="/images/movie_2.jpg"></div>
-                <div class="info_list">
-                    <h2>毒液：致命守护者</h2>
-                    <p>观众评 <span class="grade">9.3</span></p>
-                    <p>主演: 汤姆·哈迪,米歇尔·威廉姆斯,里兹·阿迈德</p>
-                    <p>今天56家影院放映443场</p>
-                </div>
-                <div class="btn_mall">
-                    购票
+                   购票
                 </div>
             </li>
         </ul>
@@ -103,8 +47,32 @@
 </template>
 
 <script>
+import axios from 'axios'
+import Vue from 'vue'
+    //过滤器：对图片处理
+        Vue.filter('filterImg',(url)=>{
+            return url.replace('w.h','128.180')
+        })
+
 export default {
-    name:"Nowplayong"
+    name:"Nowplayong",
+    data(){
+        return{
+            movieList:[]
+        }
+    },
+    mounted(){
+        axios.get('/ajax/movieOnInfoList?token=&optimus_uuid=41356720173011EBA0E401F52CFA2FA97BD666F375B74A2B87BD7D204283F828&optimus_risk_level=71&optimus_code=10').then(res=>{
+            var msg = res.data.msg;
+            if(msg = 'ok'){
+                this.movieList = res.data.movieList
+            }
+            console.log(this.movieList)
+        })
+    },
+    methods:{
+        
+    }
 }
 </script>
 
